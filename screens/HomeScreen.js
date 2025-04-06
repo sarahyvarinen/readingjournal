@@ -19,7 +19,7 @@ const BookSearchScreen = () => {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      {/* TextInput, jossa käytetään onChangeText -tapahtumaa */}
+     
       <TextInput
         style={{
           height: 40,
@@ -32,6 +32,10 @@ const BookSearchScreen = () => {
         onChangeText={text => setItem(text)}  // Päivittää hakutekstin tilan
         value={item}  // Asetetaan hakuteksti kenttään
       />
+       {/* Mikäli haluttua kirjaa ei löydy */}
+      {filteredBooks.length === 0 && item.length > 0 && (
+        <Text style={{ color: 'red', marginBottom: 20}}>No books matching "{item}"</Text>
+      )}
 
       {/* Lista suodatetuista kirjoista */}
       <FlatList
