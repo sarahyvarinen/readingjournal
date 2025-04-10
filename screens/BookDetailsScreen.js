@@ -1,24 +1,85 @@
-// screens/BookDetailsScreen.js
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 
-const BookDetailsScreen = ({ route }) => {
-  const { bookId } = route.params;
-  // Tähän sit api kutsu!!
-  const bookDetails = {
-    id: bookId,
-    title: 'The Hobbit',
-    author: 'J.R.R. Tolkien',
-    description: 'A fantasy novel about a hobbit named Bilbo Baggins.',
-  };
+const BookDetailsScreen = () => {
+  const [item, setItem] = useState('');
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (item.length < 3) {
+      setBooks([]);
+      return;
+    }
+
+    const fetchBooks = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(item)}`);
+        const data = await response.json();
+        const bookResults = data.docs.map(book => ({
+          key: book.key,
+          title: book.title,
+          author: book.author_name?.[0] || 'Unknown author',
+        }));
+        setBooks(bookResults);
+      } catch (error) {
+        console.error('Error fetching books:', error);
+        setBooks([]);
+      }
+      setLoading(false);
+    };
+
+    fetchBooks();
+  }, [item]);
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{bookDetails.title}</Text>
-      <Text style={{ fontSize: 18, marginVertical: 10 }}>By {bookDetails.author}</Text>
-      <Text>{bookDetails.description}</Text>
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Search a book"
+        onChangeText={text => setItem(text)}
+        value={item}
+      />
+
+      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+
+      {!loading && item.length >= 3 && books.length === 0 && (
+        <Text style={styles.noResults}>No books matching search: "{item}"</Text>
+      )}
+
+      <FlatList
+        data={books}
+        keyExtractor={item => item.key}
+        renderItem={({ item }) => (
+          <Text style={styles.bookItem}>
+            {item.title} — {item.author}
+          </Text>
+        )}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingLeft: 10,
+  },
+  noResults: {
+    color: 'red',
+    marginBottom: 20,
+  },
+  bookItem: {
+    marginBottom: 10,
+  },
+});
 
 export default BookDetailsScreen;
