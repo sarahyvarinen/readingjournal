@@ -15,26 +15,16 @@ const BookDetailsScreen = ({ navigation }) => {
     const fetchBooks = async () => {
       setLoading(true);
       try {
-        // Lisätty user agent header api:n tarjoajan pyynnöstä.
-        const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(item)}`, {
-          method: 'GET',
-          headers: {
-            'User-Agent': 'ReadingJournalApp/1.0 (sara.hyvarinen2@myy.haaga-helia.fi)', 
-          },
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          const bookResults = data.docs.map(book => ({
-            key: book.key,
+        const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(item)}`);
+        const data = await response.json();
+        const bookResults = data.docs
+          .filter(book => book.key?.startsWith('/works/')) // Varmistetaan että se on "work"-alkuinen
+          .map(book => ({
+            key: book.key, // esim. "/works/OL12345W"
             title: book.title,
             author: book.author_name?.[0] || 'Unknown author',
           }));
-          setBooks(bookResults);
-        } else {
-          console.error('Failed to fetch books');
-          setBooks([]);
-        }
+        setBooks(bookResults);
       } catch (error) {
         console.error('Error fetching books:', error);
         setBooks([]);
@@ -66,7 +56,7 @@ const BookDetailsScreen = ({ navigation }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.bookItem}
-            onPress={() => navigation.navigate('BookInfo', { bookKey: item.key })} // Navigate to BookInfoScreen with bookKey
+            onPress={() => navigation.navigate('BookInfo', { bookKey: item.key })} // ✅ Lähetetään bookKey esim. "/works/OL12345W"
           >
             <Text>{item.title} — {item.author}</Text>
           </TouchableOpacity>
