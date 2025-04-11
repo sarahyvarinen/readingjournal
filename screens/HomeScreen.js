@@ -9,13 +9,13 @@ const HomeScreen = ({ navigation }) => {
       {/* Button for Search books */}
       <Button
         title="Search books"
-        onPress={() => navigation.navigate('BookDetails')} 
+        onPress={() => navigation.navigate('BookDetails')} // Navigate to the BookDetailsScreen
       />
 
       {/* Button for Profile */}
       <Button
         title="Go to Profile"
-        onPress={() => navigation.navigate('Profile')} 
+        onPress={() => navigation.navigate('Profile')} // Navigate to the ProfileScreen
       />
     </View>
   );
