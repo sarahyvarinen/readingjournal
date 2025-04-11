@@ -5,9 +5,17 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to Reading Journal</Text>
+      
+      {/* Button for Search books */}
       <Button
         title="Search books"
-        onPress={() => navigation.navigate('BookDetails')}
+        onPress={() => navigation.navigate('BookDetails')} 
+      />
+
+      {/* Button for Profile */}
+      <Button
+        title="Go to Profile"
+        onPress={() => navigation.navigate('Profile')} 
       />
     </View>
   );
