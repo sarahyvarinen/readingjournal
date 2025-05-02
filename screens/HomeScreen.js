@@ -17,6 +17,12 @@ const HomeScreen = ({ navigation }) => {
         title="Go to Profile"
         onPress={() => navigation.navigate('Profile')} // Navigate to the ProfileScreen
       />
+
+      {/* Button for Editing */}
+      <Button 
+      title="Edit profile"
+      onPress={() => navigation.navigate('Edit')}
+      />
     </View>
   );
 };
