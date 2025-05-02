@@ -26,15 +26,21 @@ export default function ProfileScreen({ navigation }) {
           }}
           style={styles.avatar}
         />
-        <Text style={styles.label}>Sähköposti: {user?.email}</Text>
-        <Text style={styles.label}>Nimimerkki: {user?.displayName || 'Ei asetettu'}</Text>
-        <Text style={styles.label}>Luetut kirjat: 12</Text>
-        <Text style={styles.label}>Keskeneräiset kirjat: 3</Text>
-        <Text style={styles.label}>Suosikkigenre: Fantasia</Text>
+        <Text style={styles.label}>Email: {user?.email}</Text>
+        <Text style={styles.label}>Name: {user?.displayName || 'Ei asetettu'}</Text>
+        <Text style={styles.label}>Read books: 12</Text>
+        <Text style={styles.label}>Books I am reading right now: </Text>
+        <Text style={styles.label}>Favourite genre: </Text>
         <View style={styles.buttonContainer}>
           <Button title="Kirjaudu ulos" onPress={handleLogout} color="#c62828" />
         </View>
       </View>
+
+      {/* Ketun kuva alareunassa */}
+      <Image
+        source={require('../assets/foxt.jpg')} // Oletetaan, että kuva on assets-kansiossa
+        style={styles.foxImage}
+      />
     </View>
   );
 }
@@ -44,6 +50,7 @@ const styles = StyleSheet.create({
     padding: 24,
     flex: 1,
     backgroundColor: '#e6ecf0',
+    position: 'relative', // Tämä on tärkeää, jotta kuvan voi sijoittaa absoluuttisesti
   },
   title: {
     fontSize: 28,
@@ -52,7 +59,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: 'olive',
     borderRadius: 16,
     padding: 20,
     shadowColor: '#000',
@@ -73,5 +80,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
+  },
+  foxImage: {
+    width: 80,
+    height: 80,
+    position: 'absolute',
+    bottom: 10, // Sijoittaa kuvan alareunaan
+    left: '15%', // Keskittää kuvan horisontaalisesti
+    marginLeft: -40, // Puoleksi kuvan leveydestä, jotta se on tarkasti keskellä
   },
 });

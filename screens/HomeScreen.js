@@ -29,15 +29,49 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    padding: 24,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    backgroundColor: '#e6ecf0',
+    position: 'relative', // Tämä on tärkeää, jotta kuvan voi sijoittaa absoluuttisesti
   },
   title: {
-    fontSize: 22,
+    fontSize: 28,
+    fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: 'olive',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 16,
+    marginVertical: 4,
+  },
+  buttonContainer: {
+    marginTop: 20,
+  },
+  foxImage: {
+    width: 80,
+    height: 80,
+    position: 'absolute',
+    bottom: 10, // Sijoittaa kuvan alareunaan
+    left: '15%', // Keskittää kuvan horisontaalisesti
+    marginLeft: -40, // Puoleksi kuvan leveydestä, jotta se on tarkasti keskellä
   },
 });
+
 
 export default HomeScreen;
