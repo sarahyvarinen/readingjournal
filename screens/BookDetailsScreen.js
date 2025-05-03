@@ -18,9 +18,9 @@ const BookDetailsScreen = ({ navigation }) => {
         const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(item)}`);
         const data = await response.json();
         const bookResults = data.docs
-          .filter(book => book.key?.startsWith('/works/')) // Varmistetaan että se on "work"-alkuinen
+          .filter(book => book.key?.startsWith('/works/')) 
           .map(book => ({
-            key: book.key, // esim. "/works/OL12345W"
+            key: book.key, 
             title: book.title,
             author: book.author_name?.[0] || 'Unknown author',
           }));
@@ -56,7 +56,7 @@ const BookDetailsScreen = ({ navigation }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.bookItem}
-            onPress={() => navigation.navigate('BookInfo', { bookKey: item.key })} // ✅ Lähetetään bookKey esim. "/works/OL12345W"
+            onPress={() => navigation.navigate('BookInfo', { bookKey: item.key })} 
           >
             <Text>{item.title} — {item.author}</Text>
           </TouchableOpacity>

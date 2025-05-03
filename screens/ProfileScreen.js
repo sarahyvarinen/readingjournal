@@ -1,19 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, Image } from 'react-native';
 import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
+import * as Battery from 'expo-battery';
 
 export default function ProfileScreen({ navigation }) {
   const user = auth.currentUser;
+  const [batteryLevel, setBatteryLevel] = useState(null);
+  const [currentTime, setCurrentTime] = useState('');
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
       navigation.replace('Login');
     } catch (error) {
-      console.error('Uloskirjautuminen epäonnistui:', error);
+      console.error('Logout failed:', error);
     }
   };
+
+  // Tells the battery level
+  useEffect(() => {
+    const fetchBattery = async () => {
+      const level = await Battery.getBatteryLevelAsync();
+      setBatteryLevel(Math.round(level * 100));
+    };
+    fetchBattery();
+  }, []);
+
+  // Updates time from phone
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      setCurrentTime(`${hours}:${minutes}`);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 60000); // updates once a minute
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -27,20 +53,20 @@ export default function ProfileScreen({ navigation }) {
           style={styles.avatar}
         />
         <Text style={styles.label}>Email: {user?.email}</Text>
-        <Text style={styles.label}>Name: {user?.displayName || 'Ei asetettu'}</Text>
+        <Text style={styles.label}>Name: {user?.displayName || 'Not set'}</Text>
         <Text style={styles.label}>Read books: 12</Text>
-        <Text style={styles.label}>Books I am reading right now: </Text>
+        <Text style={styles.label}>Currently reading: </Text>
         <Text style={styles.label}>Favourite genre: </Text>
+
+        <Text style={styles.extra}>🦊 Fox is currently reading at {currentTime}</Text>
+        {batteryLevel !== null && (
+          <Text style={styles.extra}>🔋 Your fox is {batteryLevel} % happy</Text>
+        )}
+
         <View style={styles.buttonContainer}>
           <Button title="Kirjaudu ulos" onPress={handleLogout} color="#c62828" />
         </View>
       </View>
-
-      {/* Ketun kuva alareunassa */}
-      <Image
-        source={require('../assets/foxt.jpg')} // Oletetaan, että kuva on assets-kansiossa
-        style={styles.foxImage}
-      />
     </View>
   );
 }
@@ -50,7 +76,6 @@ const styles = StyleSheet.create({
     padding: 24,
     flex: 1,
     backgroundColor: '#e6ecf0',
-    position: 'relative', // Tämä on tärkeää, jotta kuvan voi sijoittaa absoluuttisesti
   },
   title: {
     fontSize: 28,
@@ -78,15 +103,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 4,
   },
+  extra: {
+    marginTop: 8,
+    fontSize: 16,
+    fontStyle: 'italic',
+  },
   buttonContainer: {
     marginTop: 20,
-  },
-  foxImage: {
-    width: 80,
-    height: 80,
-    position: 'absolute',
-    bottom: 10, // Sijoittaa kuvan alareunaan
-    left: '15%', // Keskittää kuvan horisontaalisesti
-    marginLeft: -40, // Puoleksi kuvan leveydestä, jotta se on tarkasti keskellä
   },
 });

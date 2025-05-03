@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     padding: 24,
     flex: 1,
     backgroundColor: '#e6ecf0',
-    position: 'relative', // Tämä on tärkeää, jotta kuvan voi sijoittaa absoluuttisesti
+    position: 'relative', 
   },
   title: {
     fontSize: 28,
@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     position: 'absolute',
-    bottom: 10, // Sijoittaa kuvan alareunaan
-    left: '15%', // Keskittää kuvan horisontaalisesti
-    marginLeft: -40, // Puoleksi kuvan leveydestä, jotta se on tarkasti keskellä
+    bottom: 10, 
+    left: '15%', 
+    marginLeft: -40, 
   },
 });
 

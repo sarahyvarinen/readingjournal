@@ -37,13 +37,13 @@ export default function EditProfileScreen() {
     if (!user) return;
 
     try {
-      // Päivitä Firebase Auth -profiili
+      // Updates data from Firebase
       await updateProfile(user, {
         displayName,
         photoURL,
       });
 
-      // Päivitä Firestore tiedot
+      // Updates data from Firestore
       const userRef = doc(db, 'users', user.uid);
       const userData = {
         favoriteGenre,
@@ -53,23 +53,23 @@ export default function EditProfileScreen() {
 
       await setDoc(userRef, userData, { merge: true });
 
-      Alert.alert('Onnistui', 'Profiili päivitetty!');
+      Alert.alert('Success', 'profile updated!');
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Virhe', error.message);
+      Alert.alert('Error', error.message);
     }
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Nimimerkki"
+        placeholder="Name"
         value={displayName}
         onChangeText={setDisplayName}
         style={styles.input}
       />
       <TextInput
-        placeholder="Suosikkigenre"
+        placeholder="Favourite genre"
         value={favoriteGenre}
         onChangeText={setFavoriteGenre}
         style={styles.input}
@@ -85,12 +85,12 @@ export default function EditProfileScreen() {
         <Button title="-" onPress={() => setInProgressBooks(Math.max(0, inProgressBooks - 1))} />
       </View>
       <TextInput
-        placeholder="Profiilikuva URL"
+        placeholder="Profilepicture URL"
         value={photoURL}
         onChangeText={setPhotoURL}
         style={styles.input}
       />
-      <Button title="Tallenna muutokset" onPress={handleUpdate} />
+      <Button title="Save changes" onPress={handleUpdate} />
     </View>
   );
 }
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1, 
     padding: 20, 
-    backgroundColor: 'green'  // Vihreä tausta
+    backgroundColor: 'green'  // Green background
   },
   input: {
     marginVertical: 10,

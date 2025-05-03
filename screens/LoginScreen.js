@@ -1,31 +1,31 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig';  // Tuodaan auth firebaseConfig.js:stä
+import { auth } from '../firebaseConfig';  
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [isLogin, setIsLogin] = useState(true); // Hallitaan, ollaanko kirjautumassa vai rekisteröitymässä
+    const [isLogin, setIsLogin] = useState(true); // This controls if the user wants to login or register
 
     const handleLogin = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            console.log("Kirjautuminen onnistui"); // Debug
+            console.log("Login successfull"); // Debug
         } catch (err) {
             setError(err.message);
-            console.log("Virhe kirjautumisessa:", err.message); // Debug
+            console.log("Error at login:", err.message); // Debug
         }
     };
 
     const handleRegister = async () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
-            console.log("Rekisteröinti onnistui"); // Debug
+            console.log("Registeration success"); // Debug
         } catch (err) {
             setError(err.message);
-            console.log("Virhe rekisteröinnissä:", err.message); // Debug
+            console.log("Error at registeration:", err.message); // Debug
         }
     };
 

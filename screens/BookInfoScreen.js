@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 const BookInfoScreen = ({ route }) => {
-  const { bookKey } = route.params;  // Esimerkiksi "/works/OL20895240W"
+  const { bookKey } = route.params; 
   const [bookDetails, setBookDetails] = useState(null);
   const [authorName, setAuthorName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const BookInfoScreen = ({ route }) => {
         const data = await response.json();
         setBookDetails(data);
 
-        // Tämä hakee myös kirjoittajan nimen erillisestä API-kutsusta
+        // This fetches the author of the book
         if (data?.authors?.length > 0) {
           const authorKey = data.authors[0].author.key; 
           const authorRes = await fetch(`https://openlibrary.org${authorKey}.json`);

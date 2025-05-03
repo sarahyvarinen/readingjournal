@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native'; // ✅ lisää Image ja StyleSheet
+import { Text, View, Image, StyleSheet } from 'react-native'; 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -72,7 +72,7 @@ function App() {
         </Stack.Navigator>
       </NavigationContainer>
 
-      {/* ✅ Kettukuva alareunaan */}
+      {/* Fox image */}
       <Image
         source={require('./assets/foxt.jpg')}
         style={styles.fox}
