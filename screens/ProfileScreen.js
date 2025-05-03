@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, Image } from 'react-native';
-import { auth } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import * as Battery from 'expo-battery';
 
 export default function ProfileScreen({ navigation }) {
   const user = auth.currentUser;
   const [batteryLevel, setBatteryLevel] = useState(null);
   const [currentTime, setCurrentTime] = useState('');
+  const [profileData, setProfileData] = useState({
+    favoriteGenre: '',
+    readBooks: 0,
+    inProgressBooks: 0,
+  });
 
   const handleLogout = async () => {
     try {
@@ -41,9 +47,28 @@ export default function ProfileScreen({ navigation }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Fetch user profile data from Firestore
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) return;
+      const userRef = doc(db, 'users', user.uid);
+      const docSnap = await getDoc(userRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setProfileData({
+          favoriteGenre: data.favoriteGenre || '',
+          readBooks: data.readBooks || 0,
+          inProgressBooks: data.inProgressBooks || 0,
+        });
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profiili</Text>
+      <Text style={styles.title}>Profile</Text>
 
       <View style={styles.card}>
         <Image
@@ -54,17 +79,17 @@ export default function ProfileScreen({ navigation }) {
         />
         <Text style={styles.label}>Email: {user?.email}</Text>
         <Text style={styles.label}>Name: {user?.displayName || 'Not set'}</Text>
-        <Text style={styles.label}>Read books: 12</Text>
-        <Text style={styles.label}>Currently reading: </Text>
-        <Text style={styles.label}>Favourite genre: </Text>
+        <Text style={styles.label}>Read books: {profileData.readBooks}</Text>
+        <Text style={styles.label}>Currently reading: {profileData.inProgressBooks}</Text>
+        <Text style={styles.label}>Favourite genre: {profileData.favoriteGenre}</Text>
 
         <Text style={styles.extra}>🦊 Fox is currently reading at {currentTime}</Text>
         {batteryLevel !== null && (
-          <Text style={styles.extra}>🔋 Your fox is {batteryLevel} % happy</Text>
+          <Text style={styles.extra}>🔋 Your fox is {batteryLevel}% happy</Text>
         )}
 
         <View style={styles.buttonContainer}>
-          <Button title="Kirjaudu ulos" onPress={handleLogout} color="#c62828" />
+          <Button title="Log out" onPress={handleLogout} color="#c62828" />
         </View>
       </View>
     </View>

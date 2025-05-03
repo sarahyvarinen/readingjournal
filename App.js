@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, getDocs } from 'firebase/firestore';
-import { auth, firestore } from './firebaseConfig';
+import { auth, db } from './firebaseConfig'; 
 
 import HomeScreen from './screens/HomeScreen';
 import BookDetailsScreen from './screens/BookDetailsScreen';
@@ -32,17 +32,15 @@ function App() {
     if (user) {
       const testFirestore = async () => {
         try {
-          const querySnapshot = await getDocs(collection(firestore, 'users'));
+          const querySnapshot = await getDocs(collection(db, 'users'));  // Käytetään db:tä, ei firestore
           querySnapshot.forEach((doc) => {
             console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
           });
-          setFirestoreStatus('onnistui');
-        } catch (e) {
-          console.error('Firestore-yhteys ei toimi:', e.message);
-          setFirestoreStatus('virhe');
+        } catch (error) {
+          console.error('Firestore error:', error);
         }
       };
-
+  
       testFirestore();
     }
   }, [user]);
